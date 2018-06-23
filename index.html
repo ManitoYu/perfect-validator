@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PerfectValidator</title>
+</head>
+<body>
+  <script src="./perfect-validator.js"></script>
+  <script>
+    {
+      const {
+        validator,
+        validators,
+        asyncValidators,
+        coValidators,
+        validate,
+        asyncValidate
+      } = PerfectValidator
+
+      const validateName = asyncValidators(
+        validator(value => value != '', '名称不能为空'),
+        validator(value => value.length < 10, '名称不能超过10个字符'),
+        validator(
+          value => new Promise(resolve => setTimeout(() => resolve(value != 'manito'), 2000)),
+          '名称已经被使用'
+        )
+      )
+
+      const validateAge = validators(
+        validator(value => /^\d+$/.test(value), '年龄必须是数字'),
+        validator(value => value > 0 && value < 100, '年龄必须在0-100之间')
+      )
+
+      const result = asyncValidate({
+        name: validateName,
+        age: validateAge
+      })({
+        name: 'manito',
+        age: 101
+      })
+
+      result.then(errors => console.log(errors))
+    }
+  </script>
+</body>
+</html>
