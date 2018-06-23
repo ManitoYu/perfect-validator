@@ -193,10 +193,6 @@
     return Object.prototype.toString.call(value) == '[object Object]'
   }
 
-  function isBoolean(value) {
-    return typeof value == boolean
-  }
-
   function isPromise(value) {
     return value === null || value === undefined ? false : isFunction(value.then)
   }
